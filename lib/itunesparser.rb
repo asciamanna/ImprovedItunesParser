@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler/setup'
 require 'date'
 require 'uri'
 require 'nokogiri'
