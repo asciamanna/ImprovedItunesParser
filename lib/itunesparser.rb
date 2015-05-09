@@ -8,17 +8,24 @@ require 'itunesparser/track'
 class ItunesParser
 
 	def initialize(filepath) 
+		raise IOError unless File.exist?(filepath)
 		file = File.open(filepath)
 		@doc = Nokogiri::XML(file)
 	end
 
 	def get_tracks
+		validate_plist_format
 		@doc.css('key:contains("Tracks") + dict dict').map do |node|
-			create_track node
+			create_track(node)
 		end
 	end
 
 	private
+	def validate_plist_format
+		plist_version = @doc.xpath('/*/@version').first
+		raise ArgumentError, "XML file is not a valid Plist format" if plist_version.nil? || plist_version.value != '1.0'
+	end
+
 	def create_track track_node
 		track = Track.new()
 		track.id = track_node.at('key:contains("Track ID") + integer').text.to_i
@@ -29,7 +36,7 @@ class ItunesParser
 		track.genre = track_node.at('key:contains("Genre") + string').text
 		track.kind = track_node.at('key:contains("Kind") + string').text
 		track.size = track_node.at('key:contains("Size") + integer').text.to_i
-		track.total_time = get_total_time track_node
+		track.total_time = get_total_time(track_node)
 		track.disc_number = track_node.at('key:contains("Disc Number") + integer').text.to_i
 		track.disc_count = track_node.at('key:contains("Disc Count") + integer').text.to_i
 		track.number = track_node.at('key:contains("Track Number") + integer').text.to_i
@@ -41,8 +48,8 @@ class ItunesParser
 		track.sample_rate = track_node.at('key:contains("Sample Rate") + integer').text.to_i
 		track.play_count = track_node.at('key:contains("Play Count") + integer').text.to_i
 		track.play_date_utc = Date.parse track_node.at('key:contains("Play Date UTC") + date').text
-		track.skip_count = get_optional_integer track_node, 'Skip Count' 
-		track.skip_date = get_optional_date track_node, 'Skip Date' 
+		track.skip_count = get_optional_integer(track_node, 'Skip Count')
+		track.skip_date = get_optional_date(track_node, 'Skip Date')
 		track.compilation = !!track_node.at('key:contains("Compilation") + true') 
 		track.artwork_count = track_node.at('key:contains("Artwork Count") + integer').text.to_i
 		track.persistent_id = track_node.at('key:contains("Persistent ID") + string').text

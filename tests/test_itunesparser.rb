@@ -4,6 +4,20 @@ require 'test/unit'
 require './lib/itunesparser.rb'
 
 class TestItunesParser < Test::Unit::TestCase
+
+	def test_file_is_not_a_valid_plist
+		parser = ItunesParser.new(File.dirname(__FILE__) + "/noPlist.xml")
+		assert_raise ArgumentError do
+			parser.get_tracks
+		end
+	end
+
+	def test_file_does_not_exist
+		assert_raise IOError do
+			parser = ItunesParser.new(File.dirname(__FILE__) + "/madeupfile.xml")
+		end
+	end
+
 	def test_get_tracks_returns_all_tracks_from_library
 		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
 		tracks = parser.get_tracks
