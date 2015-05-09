@@ -26,8 +26,8 @@ class ItunesParser
 		raise ArgumentError, "XML file is not a valid Plist format" if plist_version.nil? || plist_version.value != '1.0'
 	end
 
-	def create_track track_node
-		track = Track.new()
+	def create_track(track_node)
+		track = Track.new
 		track.id = track_node.at('key:contains("Track ID") + integer').text.to_i
 		track.artist = track_node.at('key:contains("Artist") + string').text
 		track.name = track_node.at('key:contains("Name") + string').text
