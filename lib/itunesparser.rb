@@ -4,6 +4,7 @@ require 'date'
 require 'uri'
 require 'nokogiri'
 require 'itunesparser/track'
+require 'itunesparser/playlist'
 
 class ItunesParser
 
@@ -17,6 +18,12 @@ class ItunesParser
 		validate_plist_format
 		@doc.css('key:contains("Tracks") + dict dict').map do |node|
 			create_track(node)
+		end
+	end
+
+	def get_playlists
+		@doc.css('key:contains("Playlists") + array > dict').map do |node|
+			create_playlist(node)
 		end
 	end
 
@@ -78,5 +85,11 @@ class ItunesParser
 	def get_total_time track_node
 		milliseconds = track_node.at('key:contains("Total Time") + integer').text.to_i
 		Time.at(milliseconds/1000).strftime('%#M:%S').sub!(/^0/, "")
+	end
+
+	def create_playlist playlist_node
+		playlist = Playlist.new
+		playlist.name = playlist_node.at('key:contains("Name") + string').text
+		playlist	
 	end
 end

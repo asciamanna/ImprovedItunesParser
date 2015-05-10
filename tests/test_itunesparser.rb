@@ -30,7 +30,6 @@ class TestItunesParser < Test::Unit::TestCase
 		expected_play_date_utc = Date.parse "2012-08-15T21:04:59Z"
 		expected_skip_date = Date.parse "2012-09-21T10:54:14Z"
 		expected_location = "file://localhost/C:/Users/anthony/Music/iTunes/iTunes Music/Bill Evans & Jim Hall/Undercurrent/03 Dream Gypsy.m4a"
-		
 
 		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
 		track = parser.get_tracks.first
@@ -63,5 +62,19 @@ class TestItunesParser < Test::Unit::TestCase
 		assert_equal(expected_location, track.location)
 		assert_equal(4, track.file_folder_count)
 		assert_equal(1, track.library_folder_count)
+	end
+
+
+	def test_get_playlists
+		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
+		playlists = parser.get_playlists
+		assert_equal(15, playlists.length)
+	end
+
+	def test_get_playlists_populates_complete_playlist_object
+		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
+		playlist = parser.get_playlists.first
+		
+		assert_equal("MILES JAZZ", playlist.name)
 	end
 end
