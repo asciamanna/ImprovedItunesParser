@@ -64,7 +64,6 @@ class TestItunesParser < Test::Unit::TestCase
 		assert_equal(1, track.library_folder_count)
 	end
 
-
 	def test_get_playlists
 		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
 		playlists = parser.get_playlists
@@ -76,5 +75,6 @@ class TestItunesParser < Test::Unit::TestCase
 		playlist = parser.get_playlists.first
 		
 		assert_equal("MILES JAZZ", playlist.name)
+		assert_equal(29475, playlist.id)
 	end
 end

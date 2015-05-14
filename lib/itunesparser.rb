@@ -90,6 +90,7 @@ class ItunesParser
 	def create_playlist playlist_node
 		playlist = Playlist.new
 		playlist.name = playlist_node.at('key:contains("Name") + string').text
+		playlist.id = playlist_node.at('key:contains("Playlist ID") + integer').text.to_i
 		playlist	
 	end
 end
