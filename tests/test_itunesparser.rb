@@ -76,5 +76,6 @@ class TestItunesParser < Test::Unit::TestCase
 		
 		assert_equal("MILES JAZZ", playlist.name)
 		assert_equal(29475, playlist.id)
+		assert_equal("5F5F204D05C1BD4F", playlist.persistent_id)
 	end
 end

@@ -91,6 +91,7 @@ class ItunesParser
 		playlist = Playlist.new
 		playlist.name = playlist_node.at('key:contains("Name") + string').text
 		playlist.id = playlist_node.at('key:contains("Playlist ID") + integer').text.to_i
+		playlist.persistent_id = playlist_node.at('key:contains("Persistent ID") + string').text
 		playlist	
 	end
 end
