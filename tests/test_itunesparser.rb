@@ -70,12 +70,13 @@ class TestItunesParser < Test::Unit::TestCase
 		assert_equal(15, playlists.length)
 	end
 
-	def test_get_playlists_populates_complete_playlist_object
+	def test_get_playlists_populates_playlist_object
 		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
 		playlist = parser.get_playlists.first
 		
 		assert_equal("MILES JAZZ", playlist.name)
 		assert_equal(29475, playlist.id)
 		assert_equal("5F5F204D05C1BD4F", playlist.persistent_id)
+		assert_equal(5, playlist.track_ids.length)
 	end
 end

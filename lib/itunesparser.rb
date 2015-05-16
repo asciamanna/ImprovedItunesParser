@@ -92,6 +92,13 @@ class ItunesParser
 		playlist.name = playlist_node.at('key:contains("Name") + string').text
 		playlist.id = playlist_node.at('key:contains("Playlist ID") + integer').text.to_i
 		playlist.persistent_id = playlist_node.at('key:contains("Persistent ID") + string').text
-		playlist	
+		playlist.track_ids = parse_track_ids(playlist_node.at('key:contains("Playlist Items") + array'))
+		playlist
+	end
+
+	def parse_track_ids(array_node) 
+		array_node.css('key:contains("Track ID") + integer').map do |int_node|
+			int_node.text.to_i
+		end
 	end
 end
