@@ -79,4 +79,10 @@ class TestItunesParser < Test::Unit::TestCase
 		assert_equal("5F5F204D05C1BD4F", playlist.persistent_id)
 		assert_equal(5, playlist.track_ids.length)
 	end
+
+	def test_get_playlists_populates_playlist_track_ids
+		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
+		playlist = parser.get_playlists.first
+		assert_equal([7796, 7798, 7800, 7802, 7804], playlist.track_ids)
+	end
 end
