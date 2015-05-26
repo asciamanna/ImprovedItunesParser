@@ -6,7 +6,7 @@ require './lib/itunesparser.rb'
 class TestItunesParser < Test::Unit::TestCase
 
 	def test_file_is_not_a_valid_plist
-		parser = ItunesParser.new(File.dirname(__FILE__) + "/noPlist.xml")
+		parser = ItunesParser.create(File.dirname(__FILE__) + "/noPlist.xml")
 		assert_raise ArgumentError do
 			parser.get_tracks
 		end
@@ -14,12 +14,12 @@ class TestItunesParser < Test::Unit::TestCase
 
 	def test_file_does_not_exist
 		assert_raise IOError do
-			parser = ItunesParser.new(File.dirname(__FILE__) + "/madeupfile.xml")
+			parser = ItunesParser.create(File.dirname(__FILE__) + "/madeupfile.xml")
 		end
 	end
 
 	def test_get_tracks_returns_all_tracks_from_library
-		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
+		parser = ItunesParser.create(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
 		tracks = parser.get_tracks
 		assert_equal(25, tracks.length)
 	end
@@ -31,7 +31,7 @@ class TestItunesParser < Test::Unit::TestCase
 		expected_skip_date = Date.parse "2012-09-21T10:54:14Z"
 		expected_location = "file://localhost/C:/Users/anthony/Music/iTunes/iTunes Music/Bill Evans & Jim Hall/Undercurrent/03 Dream Gypsy.m4a"
 
-		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
+		parser = ItunesParser.create(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
 		track = parser.get_tracks.first
 		assert_equal(17714, track.id)
 		assert_equal('Dream Gypsy', track.name)
@@ -65,13 +65,13 @@ class TestItunesParser < Test::Unit::TestCase
 	end
 
 	def test_get_playlists
-		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
+		parser = ItunesParser.create(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
 		playlists = parser.get_playlists
 		assert_equal(15, playlists.length)
 	end
 
 	def test_get_playlists_populates_playlist_object
-		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
+		parser = ItunesParser.create(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
 		playlist = parser.get_playlists.first
 		
 		assert_equal("MILES JAZZ", playlist.name)
@@ -81,7 +81,7 @@ class TestItunesParser < Test::Unit::TestCase
 	end
 
 	def test_get_playlists_populates_playlist_track_ids
-		parser = ItunesParser.new(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
+		parser = ItunesParser.create(File.dirname(__FILE__) + "/sampleiTunesLibrary.xml")
 		playlist = parser.get_playlists.first
 		assert_equal([7796, 7798, 7800, 7802, 7804], playlist.track_ids)
 	end
